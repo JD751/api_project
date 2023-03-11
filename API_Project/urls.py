@@ -1,10 +1,20 @@
 from django.contrib import admin
-from django.urls import path
-from Api.views import ImageUploadView
+from django.urls import path, include
+from Api.views import ImageViewSet
+from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+router = routers.DefaultRouter()
+router.register('images', ImageViewSet, basename='images')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('upload/', ImageUploadView.as_view(), name='image_upload'),
+    path('api/', include(router.urls)),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
  
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
