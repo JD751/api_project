@@ -1,5 +1,5 @@
 from rest_framework.parsers import MultiPartParser, FormParser
-from .models import UserProfile
+from .models import UserProfile, UploadedImage
 from .serializers import ImageSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -16,7 +16,7 @@ class ImageViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Image.objects.filter(user=user)
+        return UploadedImage.objects.filter(user=user)
     
     def perform_create(self, serializer):
         user=self.request.user
