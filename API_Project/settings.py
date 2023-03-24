@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'imagekit',
+    'protected_media',
 
 ]
 
@@ -86,6 +87,8 @@ DATABASES = {
     }
 }
 
+PROTECTED_MEDIA_ROOT = os.path.join(BASE_DIR, 'protected_media')
+PROTECTED_MEDIA_URL = '/protected/'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),

@@ -1,7 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
-from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from protected_media.models import ProtectedImageField
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+class Tier(models.Model):
+    name = models.CharField(max_length=255)
+    thumbnail_sizes = models.CharField(max_length=255, help_text="Comma-separated sizes (e.g., '200,400')")
+    access_original = models.BooleanField(default=False)
+    has_expiring_links = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 class UserProfile(models.Model):
     BASIC = 'B'
@@ -15,10 +26,33 @@ class UserProfile(models.Model):
     ]
     user = models.ForeignKey(User, max_length=15, on_delete=models.CASCADE)
     plan = models.CharField(
-        max_length=1, choices=USER_PLAN_CHOICES, default=BASIC)
+        max_length=1, choices=USER_PLAN_CHOICES, null=True, blank=True)
+    custom_tier = models.ForeignKey(Tier, on_delete=models.CASCADE, default=None, null=True, blank=True)
+    
+class ExpirationTime(models.Model):
+    user = models.ForeignKey(User, max_length=15, on_delete=models.CASCADE)
+    expiration_time = models.PositiveIntegerField(default=300, 
+                                                  validators=[MinValueValidator(300), MaxValueValidator(30000)],
+                                                    help_text="Expiration time in seconds",
+                                                    )
+
+
+
+
+
+
+def get_user_expiration_time(user):
+    try:
+        expiration_time = ExpirationTime.objects.get(user=user)
+    except ExpirationTime.DoesNotExist:
+        expiration_time = ExpirationTime.objects.create(user=user, expiration_time=300)
+
+    return expiration_time
 
 class UploadedImage(models.Model):
     image = models.ImageField(upload_to='images/', default=None, null=True)
+    image_exp = ProtectedImageField(upload_to='images/', default=None, null=True)
+    expiration_time = models.ForeignKey(ExpirationTime, on_delete=models.CASCADE, null=True)
     thumbnail_200 = ImageSpecField(source='image',
                                    processors=[ResizeToFill(200,200)],
                                    format='JPEG',
@@ -32,6 +66,8 @@ class UploadedImage(models.Model):
         User, max_length=15, on_delete=models.CASCADE, null=True)
     user_profile = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE)
+    
+    
 
     def __str__(self):
         return str(self.image)
