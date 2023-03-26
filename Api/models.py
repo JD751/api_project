@@ -42,7 +42,7 @@ class UserProfile(models.Model):
 class ExpirationTime(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     expiration_time = models.PositiveIntegerField(default=300, 
-                                                  validators=[MinValueValidator(300), MaxValueValidator(30000)],
+                                                   validators=[MinValueValidator(300), MaxValueValidator(30000)],
                                                     help_text="Expiration time in seconds",
                                                     )
 
