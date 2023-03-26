@@ -63,5 +63,7 @@ This project is licensed under the MIT license.
 Acknowledgments:
 
 Django documentation
+
 Stack Overflow
+
 Various online tutorials and resources
