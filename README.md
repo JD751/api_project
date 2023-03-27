@@ -21,7 +21,44 @@ python manage.py migrate
 
 Usage:
 
-To run the development server, use the following command:
+Docker Usage:
+
+Prerequisites:
+
+- Install Docker on your machine.
+- Building the Docker Image
+- Open a terminal/command prompt and navigate to the root directory of your - - Django project (where the Dockerfile is located).
+
+Build the Docker image by running the following command:
+
+docker build -t api_project .
+
+Replace api_project with the desired name for your Docker image. The period at the end of the command specifies that the Dockerfile is located in the current directory.
+
+Running the Docker Container:
+
+After the image has been built, run the following command to start a container:
+
+docker run -it -p 8000:8000 --name epic_noble api_project
+
+Replace epic_noble with a name for your Docker container, and api_project with the name you used when building the Docker image. This command maps port 8000 of the container to port 8000 of the host machine, allowing you to access the Django app on your host machine.
+
+Access your Django app on your host machine by opening a web browser and navigating to http://localhost:8000 or http://127.0.0.1:8000.
+
+Stopping the Docker Container:
+
+To stop the container, press Ctrl+C in the terminal where the container is running.
+
+Starting a Stopped Docker Container:
+
+To start the container again, use the following command:
+
+docker start -ai epic_noble
+Replace epic_noble with the name you used when running the container.
+
+Development Server Usage:
+
+Alternatively, to run the development server, use the following command:
 
 python manage.py runserver
 
