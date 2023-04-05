@@ -4,7 +4,7 @@ This is a Django project that provides an API for uploading and processing image
 
 This API also uses JWT authentication to authorize and authenticate the users. Moreover, the API provides the ability to assign users to three different plans: Basic, Premium, Enterprise, or to generate custom tiers and define the features of the tiers.
 
-The API has been designed to have good performance, even under load. Strategies like pagination have been used to increase the performance of the API. Tests have been written to test all the functionality of the API. Data validation has been established in the source code.
+The API has been designed to have good performance, even under load. Strategies like pagination have been used to increase the performance of the API. Tests have been written to test all the functionality of the API. Data validation has been established in the source code. Moreover the project also contains Docker file to easily convert the project into a Docker image.
 
 
 ## Installation
